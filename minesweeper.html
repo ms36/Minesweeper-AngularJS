@@ -4,14 +4,26 @@
     <link href="minesweeper.css" rel="stylesheet" type="text/css">
       <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
       <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-      <script src='minseweeper.js'></script>
-      
+      <script src='minseweeper.js'></script>      
   </head>
     <body ng-controller="MinesweeperController">               
-        <div class="minefield-ui">
-            <h3 ng-if="isWinMessageVisible">You won!</h3>
-            <h3 ng-if="hasLostMessageVisible">You Lost!</h3>
+        <div class="minefield-ui">            
             <table class="minefield">
+                <thead>
+                    <tr>
+                        <th colspan="10">Minesweeper</th>
+                    </tr>
+                    <tr>
+                        
+                            <th colspan="3" class="end-game-message" ng-if="isWinMessageVisible">You won!</th>
+                            <th colspan="3" class="end-game-message" ng-if="hasLostMessageVisible">You Lost!</th>
+                            
+                        
+                    </tr>
+                    <tr>
+                        <th><button class="button-replay"ng-if="hasLostMessageVisible || isWinMessageVisible" ng-click="replay()">Replay</button></th>
+                    </tr>
+                </thead>
                 <tr ng-repeat="row in minefield.rows">
                     <td ng-repeat="spot in row.spots" ng-click="uncoverSpot(spot, $parent.$index, $index)">
                         <div class="spot spot-covered" ng-if="spot.isCovered"></div>
@@ -27,8 +39,7 @@
                         <div class="spot spot-uncovered spot-eight" ng-if="!spot.isCovered && spot.content === 8">8</div>
                     </td>
                 </tr>
-            </table>
-            <button ng-if="hasLostMessageVisible || isWinMessageVisible" ng-click="replay()">Replay</button>
+            </table>            
         </div>
         <br/>        
     </body>

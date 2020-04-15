@@ -2,13 +2,13 @@ function MinesweeperController($scope) {
     $scope.minefield = createMinefield();
     $scope.uncoverSpot = function(spot, row, column) {
         spot.isCovered = false;
-        
-
-        if(spot.content == "empty") {
+        spot.isChecked = true;   
+    
+        if(spot.content === "empty") {
             openEmptySpot($scope.minefield, row, column);
         }
         
-        if(spot.content == "mine") {
+        if(spot.content === "mine") {
             $scope.hasLostMessageVisible = true;
             uncoverALlMines($scope.minefield);
         } else {
@@ -28,24 +28,25 @@ function MinesweeperController($scope) {
 
 function createMinefield() {
     // Size of the rows/columns
-    let gridSize = 11;    
-    var minefield = {};
+    let gridSize = 10;    
+    let minefield = {};
     minefield.rows = [];    
     // Shifted to account for 0 based index
     minefield.gridSize = gridSize - 1;
     // Number of mines grows/shrinks with the size of the gameboard
     minefield.numberOfMines = Math.ceil(gridSize * gridSize / 10);
     
-    for(var i = 0; i < minefield.gridSize; i++) {
-        var row = {};
+    for(let i = 0; i < minefield.gridSize; i++) {
+        let row = {};
         row.spots = [];
         
-        for(var j = 0; j < minefield.gridSize; j++) {
-            var spot = {};
+        for(let j = 0; j < minefield.gridSize; j++) {
+            let spot = {};
             spot.isCovered = true;
             // Determines what is displayed on a spot
             // i.e. mine, number, empty
             spot.content = "empty";
+            spot.isChecked = false;
             row.spots.push(spot);
         }
         
@@ -62,29 +63,29 @@ function getSpot(minefield, row, column) {
 
 // Places multiple mines 
 function placeManyRandomMines(minefield) {
-    for(var i = 0; i < minefield.numberOfMines; i++) {
+    for(let i = 0; i < minefield.numberOfMines; i++) {
         placeRandomMine(minefield);
     }
 }
 
 // Randomly places a mine on the gameboard
 function placeRandomMine(minefield) {
-    var row = Math.round(Math.random() * (minefield.gridSize - 1));
-    var column = Math.round(Math.random() * (minefield.gridSize - 1));
-    var spot = getSpot(minefield, row, column);
+    let row = Math.round(Math.random() * (minefield.gridSize - 1));
+    let column = Math.round(Math.random() * (minefield.gridSize - 1));
+    let spot = getSpot(minefield, row, column);
     spot.content = "mine";
 }
 
 // Caluculates the number of mines around a spot
 function calculateNumber(minefield, row, column) {
-    var thisSpot = getSpot(minefield, row, column);
+    let thisSpot = getSpot(minefield, row, column);
     
     // If this spot contains a mine then we can't place a number here
     if(thisSpot.content == "mine") {
         return;
     }
     
-    var mineCount = 0;
+    let mineCount = 0;
 
     // Counts mines around a spot
     for(let i = -1; i < 2; i++) {
@@ -94,7 +95,7 @@ function calculateNumber(minefield, row, column) {
                 // Not out of bounds
                 if(column + j >= 0 && column + j < minefield.gridSize) {    
                     // Checks spot next to for a mine                
-                    var spot = getSpot(minefield, row + i, column + j);
+                    let spot = getSpot(minefield, row + i, column + j);
                     if(spot.content == "mine") {
                         mineCount++;
                     }
@@ -109,14 +110,14 @@ function calculateNumber(minefield, row, column) {
 }
 
 function calculateAllNumbers(minefield) {
-    for(var y = 0; y < minefield.gridSize; y++) {
-        for(var x = 0; x < minefield.gridSize; x++) {
+    for(let y = 0; y < minefield.gridSize; y++) {
+        for(let x = 0; x < minefield.gridSize; x++) {
             calculateNumber(minefield, x, y);
         }
     }
 }
 
-// Uncovers spots surronding an empty spot
+// Uncovers spots surrounding an empty spot
 function openEmptySpot(minefield, row, column) {
     for(let i = -1; i < 2; i++) {
         for(let j = -1; j < 2; j++) { 
@@ -128,11 +129,16 @@ function openEmptySpot(minefield, row, column) {
             if(row + i >= 0 && row + i < minefield.gridSize) {
                 // Not out of bounds
                 if(column + j >= 0 && column + j < minefield.gridSize) {                                      
-                    let spot = getSpot(minefield, row + i, column + j);
+                    let spot = getSpot(minefield, row + i, column + j);    
                     spot.isCovered = false;
-                    // if(spot.content === 'empty') {
-                    //     openEmptySpot(minefield, row + i, column + j);
-                    // }
+                    
+                    // If the spot surrounding this spot is empty
+                    // and has not been checked, then check around
+                    // that spot as well
+                    if(!spot.isChecked && spot.content === 'empty') {                        
+                        spot.isChecked = true;  
+                        openEmptySpot(minefield, row + i, column + j);                        
+                    }                    
                 }
             }
         }                    
@@ -151,9 +157,9 @@ function uncoverALlMines(minefield) {
 }
 
 function hasWon(minefield) {
-    for(var y = 0; y < minefield.gridSize; y++) {
-        for(var x = 0; x < minefield.gridSize; x++) {
-            var spot = getSpot(minefield, y, x);
+    for(let y = 0; y < minefield.gridSize; y++) {
+        for(let x = 0; x < minefield.gridSize; x++) {
+            let spot = getSpot(minefield, y, x);
             if(spot.isCovered && spot.content != "mine") {
                 return false;
             }

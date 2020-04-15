@@ -1,10 +1,20 @@
 .minefield-ui {
-    margin: auto;
-    /* box-shadow: 0px 0px 5px blue; */
+    width: auto;
+    margin: 0 auto;
+}
+
+.end-game-message {
+    display: inline;
+}
+
+.button-replay {
+    display: inline;
+    /* margin: 20px; */
 }
 
 .minefield {    
     border-spacing:0px;
+    box-shadow: 0px 0px 10px black;
 }
 
 .minefield td {
@@ -29,9 +39,9 @@
     text-align: center;
 }
 
-.spot-mine {
+/* .spot-mine {
     background-color: firebrick;
-}
+} */
 .spot-one {        
     color: blue;
 }

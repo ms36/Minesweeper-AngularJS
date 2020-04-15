@@ -28,7 +28,7 @@ function MinesweeperController($scope) {
 
 function createMinefield() {
     // Size of the rows/columns
-    let gridSize = 10;    
+    let gridSize = 20;    
     let minefield = {};
     minefield.rows = [];    
     // Shifted to account for 0 based index

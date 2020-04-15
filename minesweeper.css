@@ -1,0 +1,58 @@
+.minefield-ui {
+    margin: auto;
+    /* box-shadow: 0px 0px 5px blue; */
+}
+
+.minefield {    
+    border-spacing:0px;
+}
+
+.minefield td {
+    padding:0
+}
+
+.spot {
+    width: 20px;
+    height: 20px;
+}
+.spot-covered {    
+    background-color: gray;
+    border: 3px outset lightgray;    
+}
+
+.spot-uncovered {    
+    background-color: lightgray;  
+    border: 0.5px solid gray;
+    padding: 2.5px;
+    font-weight: 900;
+    font-size: large;
+    text-align: center;
+}
+
+.spot-mine {
+    background-color: firebrick;
+}
+.spot-one {        
+    color: blue;
+}
+.spot-two {        
+    color: green;
+}
+.spot-three {        
+    color: red;
+}
+.spot-four {        
+    color: blue;
+}
+.spot-five {        
+    color: brown;
+}
+.spot-six {        
+    color: cyan;
+}
+.spot-seven {        
+    color: brown;
+}
+.spot-eight {        
+    color: black;
+}

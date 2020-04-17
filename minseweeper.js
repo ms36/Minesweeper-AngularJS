@@ -23,7 +23,9 @@ function MinesweeperController($scope) {
             case 2: // Middle click
                 break;
             case 3: // Right click
+            if(spot.isCovered) {
                 spot.isFlagged = !spot.isFlagged;
+            }                
                 break;
             default:                
                 break

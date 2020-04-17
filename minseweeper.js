@@ -2,6 +2,7 @@ function MinesweeperController($scope) {
     $scope.minefield = createMinefield();
     $scope.handleClick = function(event, spot, row, column) {
 
+        // Determines which mouse click is pressed
         switch(event.which) {
             case 1: // Left click
                 if(!spot.isFlagged) {
@@ -52,7 +53,7 @@ function MinesweeperController($scope) {
 
 function createMinefield() {
     // Size of the rows/columns
-    let gridSize = 20;    
+    let gridSize = 10;    
     let minefield = {};
     minefield.rows = [];    
     // Shifted to account for 0 based index
@@ -98,6 +99,9 @@ function placeRandomMine(minefield) {
     let row = Math.round(Math.random() * (minefield.gridSize - 1));
     let column = Math.round(Math.random() * (minefield.gridSize - 1));
     let spot = getSpot(minefield, row, column);
+    if(spot.content === "mine") {
+        placeRandomMine(minefield);
+    }
     spot.content = "mine";
 }
 

@@ -1,7 +1,7 @@
 body {
     background-color: aliceblue;
 }
-.minefield-ui {
+.minefield-container {
     align-items: center;
     display: flex;
     justify-content: center;   
@@ -11,9 +11,18 @@ body {
 .title {
     font-size: 2em;
 }
-/* .end-game-message {
-    
-} */
+
+.minefield-ui {
+    align-items: center;
+    display: flex;
+    justify-content: center;   
+    flex-direction: row;
+}
+
+.display-bombs {    
+    font-size: x-large;
+}
+
 
 .button-replay {
     margin: 20px;

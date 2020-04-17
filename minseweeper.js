@@ -4,33 +4,42 @@ function MinesweeperController($scope) {
 
         switch(event.which) {
             case 1: // Left click
-                spot.isCovered = false;
-                spot.isChecked = true;   
-            
-                if(spot.content === "empty") {
-                    openEmptySpot($scope.minefield, row, column);
-                }
+                if(!spot.isFlagged) {
+                    spot.isCovered = false;
+                    spot.isChecked = true;   
                 
-                if(spot.content === "mine") {
-                    $scope.hasLostMessageVisible = true;
-                    uncoverALlMines($scope.minefield);
-                } else {
-                    if(hasWon($scope.minefield)) {
-                        $scope.isWinMessageVisible = true;
+                    if(spot.content === "empty") {
+                        openEmptySpot($scope.minefield, row, column);
+                    }
+                    
+                    if(spot.content === "mine") {
+                        $scope.hasLostMessageVisible = true;
+                        uncoverALlMines($scope.minefield);
+                    } else {
+                        if(hasWon($scope.minefield)) {
+                            $scope.isWinMessageVisible = true;
+                        }
                     }
                 }
                 break;
             case 2: // Middle click
                 break;
             case 3: // Right click
-            if(spot.isCovered) {
-                spot.isFlagged = !spot.isFlagged;
-            }                
+                if(spot.isCovered) {
+                    spot.isFlagged = !spot.isFlagged;
+
+                    // If user flags spot
+                    // Reduce mine count
+                    if(spot.isFlagged) {
+                        $scope.minefield.numberOfMines--;
+                    } else {
+                        $scope.minefield.numberOfMines++;
+                    }
+                 }                
                 break;
             default:                
                 break
-        }  
-        
+        }          
     };
     // Reset the game to play again
     $scope.replay = function() {

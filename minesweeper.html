@@ -6,12 +6,15 @@
       <script src='https://kit.fontawesome.com/a076d05399.js'></script>
       <script src='minseweeper.js'></script>      
   </head>
-    <body ng-controller="MinesweeperController">                      
-        <div class="minefield-ui">   
-            <h3 class="title">Minesweeper</h3>
-            <button class="button-replay" ng-click="replay()">Replay</button> 
-            <p class="end-game-message" ng-if="isWinMessageVisible">You won!</p>
-            <p class="end-game-message" ng-if="hasLostMessageVisible">You Lost!</p>            
+    <body ng-controller="MinesweeperController">                           
+        <div class="minefield-container">   
+            <h3 class="title">Minesweeper</h3>   
+            <div class="minefield-ui">                
+                <button class="button-replay" ng-click="replay()">Replay</button> 
+                <p class="end-game-message" ng-if="isWinMessageVisible">You won!</p>
+                <p class="end-game-message" ng-if="hasLostMessageVisible">You Lost!</p> 
+                <i class="fas fa-bomb display-bombs">{{minefield.numberOfMines}}</i>        
+            </div>                           
             <table class="minefield">                
                 <tr ng-repeat="row in minefield.rows">
                     <td ng-repeat="spot in row.spots" ng-mousedown="handleClick($event, spot, $parent.$index, $index)" oncontextmenu='return false'>

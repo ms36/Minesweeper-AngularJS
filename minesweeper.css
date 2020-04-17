@@ -34,7 +34,15 @@ body {
 }
 .spot-covered {    
     background-color: gray;
-    border: 3px outset lightgray;    
+    border: 3px outset lightgray;        
+}
+
+.spot-flagged {
+    background-color: gray;
+    border: 3px outset lightgray;
+    text-align: center; 
+    line-height: 20px;
+    color: red;
 }
 
 .spot-uncovered {    

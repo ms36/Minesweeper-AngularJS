@@ -1,21 +1,34 @@
 function MinesweeperController($scope) {
     $scope.minefield = createMinefield();
-    $scope.uncoverSpot = function(spot, row, column) {
-        spot.isCovered = false;
-        spot.isChecked = true;   
-    
-        if(spot.content === "empty") {
-            openEmptySpot($scope.minefield, row, column);
-        }
+    $scope.handleClick = function(event, spot, row, column) {
+
+        switch(event.which) {
+            case 1: // Left click
+                spot.isCovered = false;
+                spot.isChecked = true;   
+            
+                if(spot.content === "empty") {
+                    openEmptySpot($scope.minefield, row, column);
+                }
+                
+                if(spot.content === "mine") {
+                    $scope.hasLostMessageVisible = true;
+                    uncoverALlMines($scope.minefield);
+                } else {
+                    if(hasWon($scope.minefield)) {
+                        $scope.isWinMessageVisible = true;
+                    }
+                }
+                break;
+            case 2: // Middle click
+                break;
+            case 3: // Right click
+                spot.isFlagged = !spot.isFlagged;
+                break;
+            default:                
+                break
+        }  
         
-        if(spot.content === "mine") {
-            $scope.hasLostMessageVisible = true;
-            uncoverALlMines($scope.minefield);
-        } else {
-            if(hasWon($scope.minefield)) {
-                $scope.isWinMessageVisible = true;
-            }
-        }
     };
     // Reset the game to play again
     $scope.replay = function() {
@@ -47,6 +60,7 @@ function createMinefield() {
             // i.e. mine, number, empty
             spot.content = "empty";
             spot.isChecked = false;
+            spot.isFlagged = false;
             row.spots.push(spot);
         }
         

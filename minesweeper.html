@@ -14,8 +14,9 @@
             <p class="end-game-message" ng-if="hasLostMessageVisible">You Lost!</p>            
             <table class="minefield">                
                 <tr ng-repeat="row in minefield.rows">
-                    <td ng-repeat="spot in row.spots" ng-click="uncoverSpot(spot, $parent.$index, $index)">
-                        <div class="spot spot-covered" ng-if="spot.isCovered"></div>
+                    <td ng-repeat="spot in row.spots" ng-mousedown="handleClick($event, spot, $parent.$index, $index)" oncontextmenu='return false'>
+                        <div class="spot spot-covered" ng-if="spot.isCovered && !spot.isFlagged"></div>
+                        <i class="fab fa-font-awesome-flag spot spot-flagged" ng-if="spot.isFlagged"></i>
                         <div class="spot spot-uncovered" ng-if="!spot.isCovered && spot.content === 'empty'"></div>
                         <i class="fas fa-bomb spot spot-uncovered spot-mine"  ng-if="!spot.isCovered && spot.content === 'mine'"></i>                    
                         <div class="spot spot-uncovered spot-one"   ng-if="!spot.isCovered && spot.content === 1">1</div>

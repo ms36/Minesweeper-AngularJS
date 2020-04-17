@@ -165,6 +165,7 @@ function uncoverALlMines(minefield) {
             let spot = getSpot(minefield, x, y);
             if(spot.content === 'mine') {
                 spot.isCovered = false;
+                spot.isFlagged = false;
             }
         }
     }

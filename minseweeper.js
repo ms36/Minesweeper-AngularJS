@@ -4,6 +4,8 @@ angular.module('minesweeper', []);
 angular.module('minesweeper')
     .controller('minesweeperController', 
         function ($scope) {
+            $scope.hasLostMessageVisible = false;
+            $scope.isWinMessageVisible = false;
             $scope.minefield = createMinefield();
             $scope.handleClick = function(event, spot, row, column) {
 
@@ -48,23 +50,28 @@ angular.module('minesweeper')
                 }          
             };
             // Reset the game to play again
-            $scope.replay = function() {
-                console.log("Replay");
+            $scope.replay = function(mineCount = 10) {   
+                console.log("Replay")             ;
                 $scope.hasLostMessageVisible = false;
                 $scope.isWinMessageVisible = false;
-                $scope.minefield = createMinefield();
+                $scope.minefield = createMinefield(mineCount);
+            }
+
+            $scope.enterMines = function(mineCount) {
+                $scope.minefield.numberOfMines = mineCount;
             }
         });
 
-function createMinefield() {
+function createMinefield(mineCount = 10) {
     // Size of the rows/columns
-    let gridSize = 10;    
+    const gridSize = 100;        
     let minefield = {};
+    minefield.maxNumberOfSpots = (gridSize -1) * (gridSize -1);
     minefield.rows = [];    
     // Shifted to account for 0 based index
     minefield.gridSize = gridSize - 1;
     // Number of mines grows/shrinks with the size of the gameboard
-    minefield.numberOfMines = Math.ceil(gridSize * gridSize / 10);
+    minefield.numberOfMines = clamp(10, mineCount, minefield.maxNumberOfSpots);//Math.ceil(gridSize * gridSize / 10);
     
     for(let i = 0; i < minefield.gridSize; i++) {
         let row = {};
@@ -88,6 +95,17 @@ function createMinefield() {
     return minefield;
 }
 
+// Keeps a value within a min/max
+function clamp(min, value, max) {
+
+    if(value < min) {
+        return min;
+    }
+    if(value > max) {
+        return max;
+    }
+    return value;
+}
 function getSpot(minefield, row, column) {
     return minefield.rows[row].spots[column];
 }
@@ -163,15 +181,19 @@ function openEmptySpot(minefield, row, column) {
             if(row + i >= 0 && row + i < minefield.gridSize) {
                 // Not out of bounds
                 if(column + j >= 0 && column + j < minefield.gridSize) {                                      
-                    let spot = getSpot(minefield, row + i, column + j);    
-                    spot.isCovered = false;
+                    let spot = getSpot(minefield, row + i, column + j); 
                     
+                    // Uncover a spot
+                    // that is not flagged
+                    if(!spot.isFlagged) {
+                        spot.isCovered = false;
+                    }                                        
                     // If the spot surrounding this spot is empty
                     // and has not been checked, then check around
                     // that spot as well
                     if(!spot.isChecked && spot.content === 'empty') {                        
-                        spot.isChecked = true;  
-                        openEmptySpot(minefield, row + i, column + j);                        
+                            spot.isChecked = true;  
+                            openEmptySpot(minefield, row + i, column + j);                                                                                             
                     }                    
                 }
             }

@@ -24,8 +24,22 @@ body {
 }
 
 
-.button-replay {
+.button-replay {    
+    margin: 21px;
+    background-color: rgba(0, 0, 0, 0);
+    font-weight: bolder;
+    border: none;
+}
+
+.button-replay:hover {    
     margin: 20px;
+    background-color: rgba(0, 0, 0, 0);
+    font-weight: bolder;
+    border: 1px gray solid;
+}
+
+.button-replay:active {    
+    background-color: rgba(100, 100, 100, 0.5);
 }
 
 .minefield {    
@@ -46,11 +60,11 @@ body {
     border: 3px outset lightgray;        
 }
 
-.spot-flagged {
+.spot-flagged {    
     background-color: gray;
     border: 3px outset lightgray;
     text-align: center; 
-    line-height: 20px;
+    vertical-align: middle;    
     color: red;
 }
 
@@ -82,7 +96,7 @@ body {
     color: brown;
 }
 .spot-six {        
-    color: cyan;
+    color: rgb(0, 179, 179);
 }
 .spot-seven {        
     color: brown;

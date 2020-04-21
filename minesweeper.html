@@ -8,16 +8,22 @@
   </head>
     <body ng-controller="minesweeperController">                           
         <div class="minefield-container">   
-            <h3 class="title">Minesweeper</h3>   
+            <h3 class="title">Minesweeper</h3>  
+            <p class="end-game-message" ng-if="isWinMessageVisible">You won!</p>
+            <p class="end-game-message" ng-if="hasLostMessageVisible">You Lost!</p>  
             <div class="minefield-ui">                
                 <button class="button-replay" ng-click="replay()">Replay</button> 
-                <p class="end-game-message" ng-if="isWinMessageVisible">You won!</p>
-                <p class="end-game-message" ng-if="hasLostMessageVisible">You Lost!</p> 
-                <i class="fas fa-bomb display-bombs">{{minefield.numberOfMines}}</i>        
+                
+                <i class="fas fa-bomb display-bombs">{{minefield.numberOfMines}}</i>      
+                <input type="number" ng-change="replay(numberOfMines)" 
+                    ng-model="numberOfMines" 
+                    value={{minefield.numberOfMines}}
+                    min="10"
+                    max={{minefield.maxNumberOfSpots}}>  
             </div>                           
             <table class="minefield">                
                 <tr ng-repeat="row in minefield.rows">
-                    <td ng-repeat="spot in row.spots" ng-mousedown="handleClick($event, spot, $parent.$index, $index)" oncontextmenu='return false'>
+                    <td ng-repeat="spot in row.spots" ng-mouseup="handleClick($event, spot, $parent.$index, $index)" oncontextmenu='return false'>
                         <div class="spot spot-covered" ng-if="spot.isCovered && !spot.isFlagged"></div>
                         <i class="fab fa-font-awesome-flag spot spot-flagged" ng-if="spot.isFlagged"></i>
                         <div class="spot spot-uncovered" ng-if="!spot.isCovered && spot.content === 'empty'"></div>

@@ -22,12 +22,10 @@ angular.module('minesweeper')
                             
                             if(spot.content === "mine") {
                                 $scope.hasLostMessageVisible = true;
-                                uncoverALlMines($scope.minefield);
-                            } else {
-                                if(hasWon($scope.minefield)) {
+                                uncoverAllMines($scope.minefield);
+                            } else if(checkIfPlayerHasWon($scope.minefield)) {
                                     $scope.isWinMessageVisible = true;
-                                }
-                            }
+                            }                            
                         }
                         break;
                     case 2: // Middle click
@@ -35,9 +33,7 @@ angular.module('minesweeper')
                     case 3: // Right click
                         if(spot.isCovered) {
                             spot.isFlagged = !spot.isFlagged;
-
-                            // If user flags spot
-                            // Reduce mine count
+                            
                             if(spot.isFlagged) {
                                 $scope.minefield.numberOfMines--;
                             } else {
@@ -51,7 +47,7 @@ angular.module('minesweeper')
             };
             // Reset the game to play again
             $scope.replay = function(mineCount = 10) {   
-                console.log("Replay")             ;
+                console.log("Replay");
                 $scope.hasLostMessageVisible = false;
                 $scope.isWinMessageVisible = false;
                 $scope.minefield = createMinefield(mineCount);
@@ -64,14 +60,14 @@ angular.module('minesweeper')
 
 function createMinefield(mineCount = 10) {
     // Size of the rows/columns
-    const gridSize = 100;        
+    const gridSize = 10;        
     let minefield = {};
     minefield.maxNumberOfSpots = (gridSize -1) * (gridSize -1);
     minefield.rows = [];    
     // Shifted to account for 0 based index
     minefield.gridSize = gridSize - 1;
     // Number of mines grows/shrinks with the size of the gameboard
-    minefield.numberOfMines = clamp(10, mineCount, minefield.maxNumberOfSpots);//Math.ceil(gridSize * gridSize / 10);
+    minefield.numberOfMines = clamp(10, mineCount, minefield.maxNumberOfSpots - 1);
     
     for(let i = 0; i < minefield.gridSize; i++) {
         let row = {};
@@ -86,8 +82,7 @@ function createMinefield(mineCount = 10) {
             spot.isChecked = false;
             spot.isFlagged = false;
             row.spots.push(spot);
-        }
-        
+        }        
         minefield.rows.push(row);
     }        
     placeManyRandomMines(minefield);
@@ -119,8 +114,8 @@ function placeManyRandomMines(minefield) {
 
 // Randomly places a mine on the gameboard
 function placeRandomMine(minefield) {
-    let row = Math.round(Math.random() * (minefield.gridSize - 1));
-    let column = Math.round(Math.random() * (minefield.gridSize - 1));
+    const row = Math.round(Math.random() * (minefield.gridSize - 1));
+    const column = Math.round(Math.random() * (minefield.gridSize - 1));
     let spot = getSpot(minefield, row, column);
     if(spot.content === "mine") {
         placeRandomMine(minefield);
@@ -132,8 +127,8 @@ function placeRandomMine(minefield) {
 function calculateNumber(minefield, row, column) {
     let thisSpot = getSpot(minefield, row, column);
     
-    // If this spot contains a mine then we can't place a number here
-    if(thisSpot.content == "mine") {
+    // If this spot contains a mine, then we can't place a number here
+    if(thisSpot.content === "mine") {
         return;
     }
     
@@ -148,14 +143,13 @@ function calculateNumber(minefield, row, column) {
                 if(column + j >= 0 && column + j < minefield.gridSize) {    
                     // Checks spot next to for a mine                
                     let spot = getSpot(minefield, row + i, column + j);
-                    if(spot.content == "mine") {
+                    if(spot.content === "mine") {
                         mineCount++;
                     }
                 }
             }
         }                    
     }   
-    
     if(mineCount > 0) {
         thisSpot.content = mineCount;
     }
@@ -182,9 +176,7 @@ function openEmptySpot(minefield, row, column) {
                 // Not out of bounds
                 if(column + j >= 0 && column + j < minefield.gridSize) {                                      
                     let spot = getSpot(minefield, row + i, column + j); 
-                    
-                    // Uncover a spot
-                    // that is not flagged
+                                        
                     if(!spot.isFlagged) {
                         spot.isCovered = false;
                     }                                        
@@ -201,10 +193,10 @@ function openEmptySpot(minefield, row, column) {
     }   
 }
 
-function uncoverALlMines(minefield) {
+function uncoverAllMines(minefield) {
     for(let x = 0; x < minefield.gridSize; x++) {
         for(let y = 0; y < minefield.gridSize; y++) {
-            let spot = getSpot(minefield, x, y);
+            const spot = getSpot(minefield, x, y);
             if(spot.content === 'mine') {
                 spot.isCovered = false;
                 spot.isFlagged = false;
@@ -213,11 +205,11 @@ function uncoverALlMines(minefield) {
     }
 }
 
-function hasWon(minefield) {
-    for(let y = 0; y < minefield.gridSize; y++) {
-        for(let x = 0; x < minefield.gridSize; x++) {
-            let spot = getSpot(minefield, y, x);
-            if(spot.isCovered && spot.content != "mine") {
+function checkIfPlayerHasWon(minefield) {
+    for(let x = 0; x < minefield.gridSize; x++) {
+        for(let y = 0; y < minefield.gridSize; y++) {
+            let spot = getSpot(minefield, x, y);
+            if(spot.isCovered && spot.content !== "mine") {
                 return false;
             }
         }

@@ -12,14 +12,15 @@
             <p class="end-game-message" ng-if="isWinMessageVisible">You won!</p>
             <p class="end-game-message" ng-if="hasLostMessageVisible">You Lost!</p>  
             <div class="minefield-ui">                
-                <button class="button-replay" ng-click="replay()">Replay</button> 
+                <button class="button-replay" ng-click="replay(numberOfMines)">Replay</button> 
                 
                 <i class="fas fa-bomb display-bombs">{{minefield.numberOfMines}}</i>      
                 <input type="number" ng-change="replay(numberOfMines)" 
                     ng-model="numberOfMines" 
                     value={{minefield.numberOfMines}}
                     min="10"
-                    max={{minefield.maxNumberOfSpots}}>  
+                    max={{minefield.maxNumberOfSpots - 1}}
+                    style="width: 40px">  
             </div>                           
             <table class="minefield">                
                 <tr ng-repeat="row in minefield.rows">
